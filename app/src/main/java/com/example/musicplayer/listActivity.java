@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class listActivity extends AppCompatActivity {
-    private Button play;
+    private ImageView play;
     private Button next;
     private Button prev;
     private Button playList;
@@ -57,7 +57,7 @@ public class listActivity extends AppCompatActivity {
         playList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(listActivity.this,MusicListAdapter.class);
+                Intent intent=new Intent(listActivity.this,MainActivity.class);
                 startActivity(intent);
             }
         });
@@ -72,7 +72,12 @@ public class listActivity extends AppCompatActivity {
             songName.setText(currentSong.getTitle());
             artistName.setText(currentSong.getartist());
         }
-        play.setOnClickListener(v->pausePlay());
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pausePlay();
+            }
+        });
         next.setOnClickListener(v->playNext());
         prev.setOnClickListener(v->playPrevious());
         playMusic();
@@ -106,10 +111,13 @@ public class listActivity extends AppCompatActivity {
         setResourceWithMusic();
     }
     private void pausePlay(){
-        if(mediaPlayer.isPlaying())
+        if(mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
-        else mediaPlayer.start();
-        pause.setVisibility(View.GONE);
-        play.setVisibility(View.VISIBLE);
+            play.setImageResource(R.drawable.media_pause);
+        }
+        else {
+            mediaPlayer.start();
+            play.setImageResource(R.drawable.media_play);
+        }
     }
 }
