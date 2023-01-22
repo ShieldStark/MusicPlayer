@@ -28,7 +28,6 @@ public class listActivity extends AppCompatActivity {
     private Button next;
     private Button prev;
     private Button playList;
-    private Button pause;
     private ImageView songImg;
     private TextView songName;
     private TextView artistName;
@@ -44,13 +43,13 @@ public class listActivity extends AppCompatActivity {
         next=findViewById(R.id.next);
         prev=findViewById(R.id.btn_prev);
         play=findViewById(R.id.btn_ply);
-        pause=findViewById(R.id.btn_pause);
         songImg=findViewById(R.id.song_image_view);
         songName=findViewById(R.id.song_name);
         artistName=findViewById(R.id.artist_name);
 
         songName.setSelected(true);
         songList=(ArrayList<AudioAdapter>) getIntent().getSerializableExtra("LIST");
+        play.setImageResource(R.drawable.media_pause);
 
         setResourceWithMusic();
 
@@ -91,8 +90,7 @@ public class listActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        pause.setVisibility(View.VISIBLE);
-        play.setVisibility(View.GONE);
+        play.setImageResource(R.drawable.media_pause);
 
     }
     private void playNext(){
@@ -113,11 +111,11 @@ public class listActivity extends AppCompatActivity {
     private void pausePlay(){
         if(mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
-            play.setImageResource(R.drawable.media_pause);
+            play.setImageResource(R.drawable.media_play);
         }
         else {
             mediaPlayer.start();
-            play.setImageResource(R.drawable.media_play);
+            play.setImageResource(R.drawable.media_pause);
         }
     }
 }
