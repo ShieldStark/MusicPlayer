@@ -1,102 +1,85 @@
 package com.example.musicplayer;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    private Button play;
-    private Button next;
-    private Button prev;
-    private Button playList;
-    private Button pause;
-    private ImageView songImg;
-    private TextView songName;
-    private TextView artistName;
-    private ArrayList<AudioAdapter> songList;
-    AudioAdapter currentSong;
-    MediaPlayer mediaPlayer= MyMediaPlayer.getInstance();
 
+
+
+
+    private RecyclerView recyclerView;
+    private TextView noMusicTextView;
+    private ArrayList<AudioAdapter> songsList=new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        playList=findViewById(R.id.playlist);
-        next=findViewById(R.id.next);
-        prev=findViewById(R.id.btn_prev);
-        play=findViewById(R.id.btn_ply);
-        pause=findViewById(R.id.btn_pause);
-        songImg=findViewById(R.id.song_image_view);
-        songName=findViewById(R.id.songs_text);
-        artistName=findViewById(R.id.artist_text_view);
-        songName.setSelected(true);
-        songList=(ArrayList<AudioAdapter>) getIntent().getSerializableExtra("LIST");
+        recyclerView=findViewById(R.id.recycler_view);
+        noMusicTextView=findViewById(R.id.no_song);
 
-        setResourceWithMusic();
-
-        playList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(MainActivity.this,MusicListAdapter.class);
-                startActivity(intent);
-            }
-        });
-
-
-
-
-    }
-    void setResourceWithMusic(){
-        currentSong=songList.get(MyMediaPlayer.currentIndex);
-        songName.setText(currentSong.getTitle());
-        artistName.setText(currentSong.getartist());
-        play.setOnClickListener(v->pausePlay());
-        next.setOnClickListener(v->playNext());
-        prev.setOnClickListener(v->playPrevious());
-        playMusic();
-    }
-    private void playMusic(){
-        mediaPlayer.reset();
-        try {
-            mediaPlayer.setDataSource(currentSong.getPath());
-            mediaPlayer.prepare();
-            mediaPlayer.start();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(checkPermission()==false){
+            requestPermission();
+            return;
         }
-        pause.setVisibility(View.VISIBLE);
-        play.setVisibility(View.GONE);
+        String[] projection={
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.ARTIST
+        };
+        String selection = MediaStore.Audio.Media.IS_MUSIC +" != 0";
+        Cursor cursor=getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,projection,selection,null,null);
+        while(cursor.moveToNext()){
+            AudioAdapter songData=new AudioAdapter(cursor.getString(1),cursor.getString(0),cursor.getString(2));
+            if(new File(songData.getPath()).exists())
+                songsList.add(songData);
+
+            if(songsList.size()==0)
+                noMusicTextView.setVisibility(View.VISIBLE);
+            else{
+                recyclerView.setLayoutManager(new LinearLayoutManager(this));
+                recyclerView.setAdapter(new MusicListAdapter(songsList,getApplicationContext()));
+            }
+        }
 
     }
-    private void playNext(){
-        if(MyMediaPlayer.currentIndex==songList.size()-1)
-            return;
-        MyMediaPlayer.currentIndex+=1;
-        mediaPlayer.reset();
-        setResourceWithMusic();
-
+    boolean checkPermission(){
+        int result= ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        if(result== PackageManager.PERMISSION_GRANTED)
+            return true;
+        else return false;
     }
-    private void playPrevious(){
-        if(MyMediaPlayer.currentIndex==0)
-            return;
-        MyMediaPlayer.currentIndex-=1;
-        mediaPlayer.reset();
-        setResourceWithMusic();
+    void requestPermission(){
+        if(ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,Manifest.permission.READ_EXTERNAL_STORAGE)){
+            Toast.makeText(MainActivity.this,"READ PERMISSION IS REQUIRED,PLEASE ALLOW FROM SETTTINGS",Toast.LENGTH_SHORT).show();
+        }else
+            ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},123);
     }
-    private void pausePlay(){
-        if(mediaPlayer.isPlaying())
-            mediaPlayer.pause();
-        else mediaPlayer.start();
-        pause.setVisibility(View.GONE);
-        play.setVisibility(View.VISIBLE);
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if(recyclerView!=null){
+            recyclerView.setAdapter(new MusicListAdapter(songsList,getApplicationContext()));
+        }
     }
 }
