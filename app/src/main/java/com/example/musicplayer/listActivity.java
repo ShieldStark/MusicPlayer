@@ -52,6 +52,7 @@ public class listActivity extends AppCompatActivity {
         artistName=findViewById(R.id.artist_name);
         actionBar=findViewById(R.id.back);
         songName.setSelected(true);
+        artistName.setSelected(true);
         songList=(ArrayList<AudioAdapter>) getIntent().getSerializableExtra("LIST");
         play.setImageResource(R.drawable.media_pause);
 

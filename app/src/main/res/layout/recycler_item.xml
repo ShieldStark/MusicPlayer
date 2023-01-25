@@ -28,7 +28,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:layout_toRightOf="@id/image"
-                android:background="#065c66"
+                android:background="#6200EE"
                 android:orientation="vertical"
                 android:paddingLeft="16dp">
 

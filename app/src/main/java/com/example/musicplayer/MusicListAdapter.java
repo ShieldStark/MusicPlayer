@@ -45,7 +45,7 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.View
             holder.titleTextView.setTextColor(Color.parseColor("#FF0000"));
             holder.current.setVisibility(View.VISIBLE);
         }else{
-            holder.titleTextView.setTextColor(Color.parseColor("#000000"));
+            holder.titleTextView.setTextColor(Color.parseColor("#ffffff"));
             holder.current.setVisibility(View.GONE);
         }
 
