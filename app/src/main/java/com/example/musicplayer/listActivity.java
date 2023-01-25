@@ -1,5 +1,6 @@
 package com.example.musicplayer;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -7,12 +8,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.ActionBar;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -34,6 +37,7 @@ public class listActivity extends AppCompatActivity {
     private ArrayList<AudioAdapter> songList;
     AudioAdapter currentSong;
     MediaPlayer mediaPlayer= MyMediaPlayer.getInstance();
+    private ImageView actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +50,7 @@ public class listActivity extends AppCompatActivity {
         songImg=findViewById(R.id.song_image_view);
         songName=findViewById(R.id.song_name);
         artistName=findViewById(R.id.artist_name);
-
+        actionBar=findViewById(R.id.back);
         songName.setSelected(true);
         songList=(ArrayList<AudioAdapter>) getIntent().getSerializableExtra("LIST");
         play.setImageResource(R.drawable.media_pause);
@@ -60,7 +64,12 @@ public class listActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+        actionBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
 
 
@@ -117,5 +126,10 @@ public class listActivity extends AppCompatActivity {
             mediaPlayer.start();
             play.setImageResource(R.drawable.media_pause);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

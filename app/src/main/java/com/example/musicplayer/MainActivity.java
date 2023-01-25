@@ -1,5 +1,6 @@
 package com.example.musicplayer;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -7,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -31,13 +33,14 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private TextView noMusicTextView;
     private ArrayList<AudioAdapter> songsList=new ArrayList<>();
+    private ImageView actionBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         recyclerView=findViewById(R.id.recycler_view);
         noMusicTextView=findViewById(R.id.no_song);
-
+        actionBar=findViewById(R.id.back);
         if(checkPermission()==false){
             requestPermission();
             return;
@@ -61,6 +64,12 @@ public class MainActivity extends AppCompatActivity {
                 recyclerView.setAdapter(new MusicListAdapter(songsList,getApplicationContext()));
             }
         }
+        actionBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
     }
     boolean checkPermission(){
@@ -81,5 +90,9 @@ public class MainActivity extends AppCompatActivity {
         if(recyclerView!=null){
             recyclerView.setAdapter(new MusicListAdapter(songsList,getApplicationContext()));
         }
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }
