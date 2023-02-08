@@ -54,12 +54,12 @@
         android:layout_width="138dp"
         android:layout_height="143dp"
         android:layout_centerInParent="true"
-        android:layout_marginTop="12dp"
-        android:src="?android:attr/selectableItemBackground"
+        android:layout_marginTop="68dp"
+        android:src="@mipmap/ic_launcher"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/song_name"
-        app:srcCompat="@drawable/ic_launcher_foreground"
         tools:ignore="VectorDrawableCompat" />
 
     <TextView
@@ -68,20 +68,20 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/song_image_view"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="120dp"
-        android:textColor="#fff"
+        android:layout_marginTop="112dp"
         android:ellipsize="marquee"
-        android:marqueeRepeatLimit="marquee_forever"
-        android:singleLine="true"
-        android:scrollHorizontally="true"
-        android:text="TextView"
-        android:textSize="16dp"
         android:fontFamily="sans-serif"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:text="TextView"
+        android:textColor="#fff"
+        android:textSize="16dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/action_bar" />
 
     <ImageView
         android:id="@+id/btn_ply"

@@ -92,6 +92,7 @@ public class listActivity extends AppCompatActivity {
         playMusic();
     }
     private void playMusic(){
+        
         mediaPlayer.reset();
         try {
             mediaPlayer.setDataSource(currentSong.getPath());
